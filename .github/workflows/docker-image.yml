@@ -6,26 +6,47 @@ on:
       - 'main'
 
 jobs:
-  docker:
+  build:
     name: Build and Push
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
-      -
-        name: Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1 
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Build and push
+      - name: print-stuff
+        run: |
+          env
+          pwd
+          ls -lahrt
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: |
             ghcr.io/jaredmcqueen/jira-scraper:latest
+  update-k8s:
+    name: Update K8s yamls
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+          repository: jaredmcqueen/k8s-deployments
+      - name: print-stuff
+        run: |
+          env
+          pwd
+          ls -lahrt
+      - name: patch k8s
+        uses: actions-hub/kubectl@master
+        with:
+          args: patch --local -f k8s-deployments/jira-scraper/jira-scraper-deployment.yaml -p '{"spec":{"template":{"spec":{"containers":[{"name":"jira-scraper","image":"ghcr.io/jaredmcqueen/jira-scraper:123445"}]}}}}' -o yaml
