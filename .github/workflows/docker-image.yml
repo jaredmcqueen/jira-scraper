@@ -48,4 +48,4 @@ jobs:
       - name: patch k8s
         uses: actions-hub/kubectl@master
         with:
-          args: patch --local -f k8s-deployments/jira-scraper/jira-scraper-deployment.yaml -p '{"spec":{"template":{"spec":{"containers":[{"name":"jira-scraper","image":"ghcr.io/jaredmcqueen/jira-scraper:123445"}]}}}}' -o yaml
+          args: patch --local -f jira-scraper/jira-scraper-deployment.yaml -p '{"spec":{"template":{"spec":{"containers":[{"name":"jira-scraper","image":"ghcr.io/jaredmcqueen/jira-scraper:123445"}]}}}}' -o yaml
