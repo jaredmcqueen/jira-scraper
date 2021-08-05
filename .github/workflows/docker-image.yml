@@ -7,6 +7,8 @@ on:
 
 jobs:
   docker:
+    name: Build and Push
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     runs-on: ubuntu-latest
     steps:
       -
