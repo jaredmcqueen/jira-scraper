@@ -31,5 +31,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/jared/jira-scraper:latest
+          tags: ghcr.io/${{ github.repository_owner }}/jira-scraper:latest
           #test
