@@ -29,3 +29,12 @@ jobs:
           push: true
           tags: |
             ghcr.io/jaredmcqueen/jira-scraper:latest
+      - name: Checkout k8s repo
+        uses: actions/checkout@v2
+        with:
+          repository: jaredmcqueen/k8s-deployments
+          path: k8s-deployments
+      - name: modify app version
+        run: |
+          sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'jira-scraper/jira-scraper-deployment.yaml'
+          cat jira-scraper-deployment.yaml
