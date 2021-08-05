@@ -45,7 +45,7 @@ jobs:
       - name: update k8s repo
         uses: cpina/github-action-push-to-another-repository@main
         env:
-          API_TOKEN_GITHUB: ${{ secrets.PUSH_TOKEN }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: 'k8s-deployments'
           destination-github-username: 'jaredmcqueen'
