@@ -28,7 +28,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/jaredmcqueen/jira-scraper:latest
+            ghcr.io/jaredmcqueen/jira-scraper:${GITHUB_SHA:0:7}
   deploy:
     name: Update K8s
     needs: build
