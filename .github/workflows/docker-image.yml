@@ -50,7 +50,6 @@ jobs:
           source-directory: 'k8s-deployments'
           destination-github-username: 'jaredmcqueen'
           destination-repository-name: 'k8s-deployments'
-          user-name: 'jaredmcqueen'
           user-email: 'jaredmcqueen@gmail.com'
           target-branch: main
 
