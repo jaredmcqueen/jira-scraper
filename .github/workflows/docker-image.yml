@@ -29,12 +29,12 @@ jobs:
           push: true
           tags: |
             ghcr.io/jaredmcqueen/jira-scraper:${GITHUB_SHA:0:7}
-  deploy:
-    name: Update K8s
-    needs: build
-    if: "!contains(github.event.head_commit.message, 'ci skip')"
-    runs-on: ubuntu-latest
-    steps:
+#   deploy:
+#     name: Update K8s
+#     needs: build
+#     if: "!contains(github.event.head_commit.message, 'ci skip')"
+#     runs-on: ubuntu-latest
+#     steps:
       - name: Checkout k8s repo
         uses: actions/checkout@v2
         with:
