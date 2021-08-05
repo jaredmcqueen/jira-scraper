@@ -47,3 +47,14 @@ jobs:
           message: 'updated jira-scraper to {GITHUB_SHA:0:7}'
           add: '*.yaml --force'
           cwd: './k8s-deployments/'
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PUSH_TOKEN }}
+        with:
+          source-directory: 'k8s-deployments'
+          destination-github-username: 'jaredmcqueen'
+          destination-repository-name: 'k8s-deployments'
+          user-email: jaredmcqueen@gmail.com
+          target-branch: main
+
