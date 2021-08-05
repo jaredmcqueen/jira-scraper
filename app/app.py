@@ -71,5 +71,5 @@ while True:
 
     logging.info(f"inserted {len(issues)} documents into elasticsearch")
 
-    logging.info("sleeping for 1 minute")
+    logging.info("sleeping for 60 seconds")
     time.sleep(60)
