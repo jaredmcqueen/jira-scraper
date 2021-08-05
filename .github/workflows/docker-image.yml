@@ -40,5 +40,5 @@ jobs:
           pwd
           ls -lahrt
           ls *
-          sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'jira-scraper/jira-scraper-deployment.yaml'
-          cat jira-scraper-deployment.yaml
+          sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'k8s-deployments/jira-scraper/jira-scraper-deployment.yaml'
+          cat k8s-deployments/jira-scraper/jira-scraper-deployment.yaml
