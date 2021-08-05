@@ -43,6 +43,7 @@ jobs:
           sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'k8s-deployments/jira-scraper/jira-scraper-deployment.yaml'
           cat k8s-deployments/jira-scraper/jira-scraper-deployment.yaml
            - name: Pushes to another repository
+      - name: update k8s repo
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.PUSH_TOKEN }}
