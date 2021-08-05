@@ -42,3 +42,8 @@ jobs:
           ls *
           sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'k8s-deployments/jira-scraper/jira-scraper-deployment.yaml'
           cat k8s-deployments/jira-scraper/jira-scraper-deployment.yaml
+      - uses: EndBug/add-and-commit@v7
+        with:
+          message: 'updated jira-scraper to {GITHUB_SHA:0:7}'
+          add: '*.yaml --force'
+          cwd: './k8s-deployments/'
