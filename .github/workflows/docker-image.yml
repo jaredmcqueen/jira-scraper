@@ -36,5 +36,9 @@ jobs:
           path: k8s-deployments
       - name: modify app version
         run: |
+          env
+          pwd
+          ls -lahrt
+          ls *
           sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'jira-scraper/jira-scraper-deployment.yaml'
           cat jira-scraper-deployment.yaml
