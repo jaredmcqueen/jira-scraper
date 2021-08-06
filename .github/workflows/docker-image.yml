@@ -30,7 +30,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${SHORT_SHA}
+            ghcr.io/${{ github.repository }}:${{ SHORT_SHA }}
 #   deploy:
 #     name: Update K8s
 #     needs: build
