@@ -29,7 +29,7 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${SHORT_SHA}
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
 #   deploy:
 #     name: Update K8s
 #     needs: build
@@ -48,7 +48,7 @@ jobs:
           pwd
           ls -lahrt
           ls *
-          sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA:0:7}/" 'jira-scraper/jira-scraper-deployment.yaml'
+          sed -E -i'' "s/(.*jira-scraper:).*/\1${GITHUB_SHA}/" 'jira-scraper/jira-scraper-deployment.yaml'
           cat jira-scraper/jira-scraper-deployment.yaml
       - name: Commit files
         run: |
