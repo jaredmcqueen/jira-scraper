@@ -24,13 +24,12 @@ jobs:
           ls -lahrt
       - name: Build and push
         uses: docker/build-push-action@v2
-#         env:
-#           SHORT_SHA: ${GITHUB_SHA:0:7}
+        env:
+          SHORT_SHA: ${GITHUB_SHA:0:7}
         with:
-          context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.sha:0:7 }}
+            ghcr.io/${{ github.repository }}:${SHORT_SHA}
 #   deploy:
 #     name: Update K8s
 #     needs: build
