@@ -33,7 +33,6 @@ JIRA_ENDPOINT = os.environ.get("JIRA_ENDPOINT")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT")
 #  logging.info(JIRA_PROJECT)
 
-JIRA_PARAMS = {"jql-": f"project = {JIRA_PROJECT}", "maxResults": 100, "startAt": 0}
 
 logging.info("connecting to elsasticsearch")
 es = Elasticsearch(
@@ -48,8 +47,11 @@ logging.info(es.info())
 
 def get_jira_data(insert_type="current"):
     done = False
+    JIRA_PARAMS = {"jql-": f"project = {JIRA_PROJECT}", "maxResults": 100, "startAt": 0}
     issues = []
     current_date = datetime.now()
+
+    logging.info('running jira job')
 
     while not done:
         logging.info("making a request to JIRA API")
@@ -70,6 +72,7 @@ def get_jira_data(insert_type="current"):
 
     def gen_jira_issues():
         for issue in issues:
+            logging.info(issue.get('id'))
             doc = {"_index": "jira", "_id": issue.get("id"), "timestamp": current_date}
             yield {**issue, **doc}
 
@@ -79,7 +82,7 @@ def get_jira_data(insert_type="current"):
             yield {**issue, **doc}
 
     if insert_type == "current":
-        es.indices.delete("jira")
+        es.indices.delete("jira", ignore=[404])
         bulk(es, gen_jira_issues())
 
     if insert_type == "timeseries":
