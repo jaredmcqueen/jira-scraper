@@ -51,7 +51,7 @@ while True:
     while not done:
         logging.info("making a request to JIRA API")
         response = requests.get(
-            JIRA_ENDPOINT, params=JIRA_PARAMS, auth=(JIRA_USERNAME, JIRA_PASSWORD)
+            url=JIRA_ENDPOINT, params=JIRA_PARAMS, auth=(JIRA_USERNAME, JIRA_PASSWORD)
         )
         maxResults = response.json().get("maxResults")
         issues_total = response.json().get("total")
@@ -68,6 +68,7 @@ while True:
 
     for issue in issues:
         es.index(index="jira", body=issue, id=issue.get("id"))
+        es.index(index="jira-timeseries", body=issue)
 
     logging.info(f"inserted {len(issues)} documents into elasticsearch")
 
