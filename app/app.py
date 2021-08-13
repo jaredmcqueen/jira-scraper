@@ -1,10 +1,12 @@
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
 import requests
 import warnings
 import os
-import json
 import logging
 import time
+import schedule
+from datetime import datetime
 
 warnings.filterwarnings("ignore")
 warnings.simplefilter("ignore")
@@ -43,20 +45,18 @@ es = Elasticsearch(
 )
 logging.info(es.info())
 
-while True:
 
+def get_jira_data(insert_type="current"):
     done = False
     issues = []
+    current_date = datetime.now()
 
     while not done:
         logging.info("making a request to JIRA API")
         response = requests.get(
             url=JIRA_ENDPOINT, params=JIRA_PARAMS, auth=(JIRA_USERNAME, JIRA_PASSWORD)
         )
-        maxResults = response.json().get("maxResults")
         issues_total = response.json().get("total")
-        issues_received = len(response.json().get("issues"))
-
         issues.extend(response.json().get("issues"))
 
         if len(issues) < issues_total:
@@ -66,9 +66,28 @@ while True:
             logging.info(f"fetched {issues_total} issues from JIRA")
             done = True
 
-    for issue in issues:
-        es.index(index="jira", body=issue, id=issue.get("id"))
-        es.index(index="jira-timeseries", body=issue)
+    logging.info(f"got {len(issues)} to insert into elasticsearch")
 
-    logging.info("sleeping for 60 seconds")
-    time.sleep(60)
+    def gen_jira_issues():
+        for issue in issues:
+            doc = {"_index": "jira", "_id": issue.get("id"), "timestamp": current_date}
+            yield {**issue, **doc}
+
+    def gen_jira_issues_timeseries():
+        for issue in issues:
+            doc = {"_index": "jira-timeseries", "timestamp": current_date}
+            yield {**issue, **doc}
+
+    if insert_type == "current":
+        es.indices.delete("jira")
+        bulk(es, gen_jira_issues())
+
+    if insert_type == "timeseries":
+        bulk(es, gen_jira_issues_timeseries())
+
+
+schedule.every().minute.at(":00").do(get_jira_data, insert_type="current")
+schedule.every().day.at("00:00").do(get_jira_data, insert_type="timeseries")
+while True:
+    schedule.run_pending()
+    time.sleep(1)
