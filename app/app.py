@@ -70,7 +70,5 @@ while True:
         es.index(index="jira", body=issue, id=issue.get("id"))
         es.index(index="jira-timeseries", body=issue)
 
-    logging.info(f"inserted {len(issues)} documents into elasticsearch")
-
-    logging.info("sleeping for 66 seconds")
-    time.sleep(66)
+    logging.info("sleeping for 60 seconds")
+    time.sleep(60)
