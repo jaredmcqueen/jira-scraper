@@ -72,7 +72,6 @@ def get_jira_data(insert_type="current"):
 
     def gen_jira_issues():
         for issue in issues:
-            logging.info(issue.get('id'))
             doc = {"_index": "jira", "_id": issue.get("id"), "timestamp": current_date}
             yield {**issue, **doc}
 
